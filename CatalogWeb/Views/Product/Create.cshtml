@@ -1,0 +1,109 @@
+﻿@model CatalogWeb.Models.ProductViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add Product</h2>
+
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    if (ViewBag.SubCategories.Count > 0 && ViewBag.SubCategories!=null)
+    {
+        <div class="form-horizontal">
+
+            <hr />
+
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                <label for="categoryid" class="control-label col-md-2">Category</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("categoryid", new SelectList(ViewBag.Categories, "Id", "CategoryName"), new { @onchange = "PopulateSubCategories(this.value)", @id = "categoryID" })
+
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="subcategoryid" class="control-label col-md-2">SubCategory</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("subcategoryid", new SelectList(ViewBag.SubCategories, "Id", "SubCategoryName"), new { @id = "subcategoryID" })
+                    @Html.ValidationMessageFor(model => model.SubCategoryId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProductName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProductName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>There are no Sub-Categories present in the Catalog. Please create one or more sub-categories to create a product in the Catalog.   </div>
+    }
+
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    var subcategories = @Html.Raw(
+        Json.Encode(
+            ((IEnumerable<CatalogWeb.Models.SubCategoryViewModel>)ViewBag.SubCategories).Select(subcategory => new
+            {
+                Id = subcategory.Id,
+                CategoryId = subcategory.CategoryId,
+                SubCategoryName = subcategory.SubCategoryName
+            })
+        )
+    );
+
+    function PopulateSubCategories(val){
+
+        var filteredsubcategories = subcategories.filter(function (subcategory) {
+            return subcategory.CategoryId === val;
+        });
+
+        $('#subcategoryID').empty();
+        $.each(filteredsubcategories, function (index, value) {
+            $('#subcategoryID').append(
+                $('<option/>', {
+                    value: value.Id,
+                    html: value.SubCategoryName
+                })
+            );
+        });
+    }
+
+   
+
+   
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

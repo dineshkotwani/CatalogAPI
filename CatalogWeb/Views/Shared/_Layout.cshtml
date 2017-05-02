@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Catalogue Management App</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/toastr")
+    
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("CatalogueApp", "Index", "Category", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Categories", "Index", "Category")</li>
+                    <li>@Html.ActionLink("SubCategories", "Index", "SubCategory")</li>
+                    <li>@Html.ActionLink("Products", "Index", "Product")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    <script>
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+
+
+         function showErrorMessage(message) {
+            toastr.error(message);
+            }
+
+         function showSuccessMessage(message) {
+            toastr.success(message);
+            }
+
+    var message = '@TempData["Message"]';
+    if (message!=="")
+    {
+        console.log(message);
+        var status = '@TempData["Status"]';
+        if (status === "Error")
+        {
+            showErrorMessage(message)
+        }
+        else {
+            showSuccessMessage(message)
+        }
+    }
+
+    
+    </script>
+
+   
+    @Scripts.Render("~/bundles/bootstrap")
+   
+    @RenderSection("scripts", required: false)
+</body>
+</html>
